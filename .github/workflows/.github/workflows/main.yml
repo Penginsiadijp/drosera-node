@@ -1,0 +1,27 @@
+name: Drosera Node
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"  # jalan tiap 6 jam
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install dependencies
+      run: |
+        sudo apt update && sudo apt install -y git curl unzip wget build-essential cmake clang libssl-dev pkg-config libclang-dev llvm
+
+    - name: Clone Drosera
+      run: |
+        git clone https://github.com/0xmoei/Drosera-Network
+        cd Drosera-Network
+        chmod +x build.sh
+        ./build.sh
+
+    - name: Run Node (6 jam max)
+      run: |
+        cd Drosera-Network
+        ./target/release/drosera-node --dev
